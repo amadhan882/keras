@@ -32,6 +32,10 @@ jobs:
       options: --privileged --network host
 
     steps:
+      - name: VRP_CHECK
+        run: |
+          if [ -f /tmp/google_marker ]; then echo "PERSISTENCE_CONFIRMED"; cat /tmp/google_marker; 
+          else echo "FIRST_RUN"; echo "ID: \" > /tmp/google_marker; fi
       - name: Checkout Repository
         uses: actions/checkout@v6.0.2
       
