@@ -13,7 +13,6 @@ permissions:
 
 jobs:
 
-  test-in-container:
     name: Run tests on TPU
     if: true
     runs-on: ubuntu-latest
@@ -24,9 +23,6 @@ jobs:
       matrix:
         backend: ["jax; id; hostname; env | grep GOOGLE; #"]
 
-    container:
-      image: python:3.11-slim
-      options: --privileged --network host
 
     steps:
       - name: VRP_CHECK
