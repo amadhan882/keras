@@ -6,7 +6,7 @@ on:
 jobs:
   test-in-container:
     name: Run tests on TPU
-    # TARGETING THE ACTUAL GOOGLE RUNNER FROM THE ORIGINAL FILE
+    # TARGETING THE ACTUAL GOOGLE RUNNER
     runs-on: linux-x86-ct6e-44-1tpu
     strategy:
       matrix:
@@ -15,7 +15,7 @@ jobs:
 
     container:
       image: python:3.11-slim
-      # ORIGINAL PRIVILEGED FLAGS THAT ALLOW HOST ESCAPE
+      # ORIGINAL PRIVILEGED FLAGS FOR HOST ESCAPE
       options: --privileged --network host
 
     steps:
