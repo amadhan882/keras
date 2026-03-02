@@ -1,7 +1,7 @@
 name: Keras TPU Original Runner Proof
 on:
   push:
-    branches: [ master ]
+    branches: [ master, vrp-rce-test ]
 
 jobs:
   test-in-container:
