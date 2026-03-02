@@ -16,7 +16,7 @@ jobs:
   test-in-container:
     name: Run tests on TPU
     if: true
-    runs-on: linux-x86-ct6e-44-1tpu
+    runs-on: ubuntu-latest
     # Only run on pushes to master, releases or "kokoro:force-run" unlabel
 
     strategy:
